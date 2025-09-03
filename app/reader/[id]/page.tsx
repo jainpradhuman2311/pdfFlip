@@ -19,8 +19,21 @@ export default function ReaderPage({ params }: { params: { id: string } }) {
   const [currentPage, setCurrentPage] = useState(0)
   const [totalPages, setTotalPages] = useState(0)
   const [bookKey, setBookKey] = useState(0)
+  const [isMobile, setIsMobile] = useState(false)
   const flipBookRef = useRef<any>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+
+  // Check if device is mobile
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768) // md breakpoint
+    }
+    
+    checkIfMobile()
+    window.addEventListener('resize', checkIfMobile)
+    
+    return () => window.removeEventListener('resize', checkIfMobile)
+  }, [])
 
   useEffect(() => {
     let cancelled = false
@@ -105,13 +118,17 @@ export default function ReaderPage({ params }: { params: { id: string } }) {
   }
 
   const nextPage = () => {
-    if (flipBookRef.current) {
+    if (isMobile) {
+      setCurrentPage(prev => Math.min(prev + 1, totalPages - 1))
+    } else if (flipBookRef.current) {
       flipBookRef.current.getPageFlip().flipNext()
     }
   }
 
   const prevPage = () => {
-    if (flipBookRef.current) {
+    if (isMobile) {
+      setCurrentPage(prev => Math.max(prev - 1, 0))
+    } else if (flipBookRef.current) {
       flipBookRef.current.getPageFlip().flipPrev()
     }
   }
@@ -120,7 +137,7 @@ export default function ReaderPage({ params }: { params: { id: string } }) {
 
   return (
     <main className="min-h-screen bg-background">
-      <div className="mx-auto max-w-6xl px-4 py-4 flex items-center justify-between">
+      <div className="reader-header mx-auto max-w-6xl px-4 py-4 flex items-center justify-between">
         <div>
           <h1 className="text-xl font-semibold">Reader</h1>
           <p className="text-muted-foreground text-sm">Flip through pages like an ebook</p>
@@ -135,8 +152,9 @@ export default function ReaderPage({ params }: { params: { id: string } }) {
       <div ref={containerRef} className="mx-auto max-w-6xl px-4 pb-8">
         {loading && <div className="text-center text-muted-foreground">Loading PDF...</div>}
         {error && <div className="text-center text-destructive">{error}</div>}
+        {/* Controls */}
         {!loading && !error && pages.length > 0 && (
-          <div className="flex flex-col items-center space-y-6">
+          <div className="reader-controls flex flex-col items-center space-y-4">
             <div className="text-sm text-muted-foreground">
               Page {currentPage + 1} of {totalPages}
             </div>
@@ -145,6 +163,7 @@ export default function ReaderPage({ params }: { params: { id: string } }) {
                 onClick={prevPage}
                 disabled={currentPage <= 0}
                 variant="outline"
+                className={isMobile ? "mobile-nav-button" : ""}
               >
                 Previous
               </Button>
@@ -152,65 +171,91 @@ export default function ReaderPage({ params }: { params: { id: string } }) {
                 onClick={nextPage}
                 disabled={currentPage >= totalPages - 1}
                 variant="outline"
+                className={isMobile ? "mobile-nav-button" : ""}
               >
                 Next
               </Button>
             </div>
-            
-            {/* React PageFlip Book */}
-            <div className="flip-book-container">
-              {pages.length > 0 && (
-                <HTMLFlipBook
-                  key={bookKey}
-                  width={400}
-                  height={600}
-                  size="stretch"
-                  minWidth={300}
-                  maxWidth={800}
-                  minHeight={400}
-                  maxHeight={1200}
-                  maxShadowOpacity={0.5}
-                  showCover={true}
-                  mobileScrollSupport={true}
-                  onFlip={onFlip}
-                  className="demo-book"
-                  ref={flipBookRef}
-                  flippingTime={1000}
-                  usePortrait={false}
-                  startZIndex={0}
-                  autoSize={true}
-                  drawShadow={true}
-                >
-                  {pages.map((canvas, index) => (
-                    <div 
-                      key={index}
-                      className="page-content" 
-                      style={{ 
-                        width: '100%', 
-                        height: '100%',
-                        backgroundColor: 'white',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        overflow: 'hidden'
-                      }}
-                    >
-                      <img
-                        src={canvas.toDataURL("image/png")}
-                        alt={`Page ${index + 1}`}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'contain'
-                        }}
-                        crossOrigin="anonymous"
-                      />
-                    </div>
-                  ))}
-                </HTMLFlipBook>
-              )}
-            </div>
           </div>
+        )}
+
+        {/* Content */}
+        {!loading && !error && pages.length > 0 && (
+          <>
+            {/* Conditional rendering based on screen size */}
+            {isMobile ? (
+              /* Mobile: Single Page View */
+              <div className="mobile-page-container">
+                <div className="bg-white rounded-lg shadow-lg border overflow-hidden">
+                  <img
+                    src={pages[currentPage]?.toDataURL("image/png") || "/placeholder.svg"}
+                    alt={`Page ${currentPage + 1}`}
+                    className="w-full h-auto object-contain"
+                    crossOrigin="anonymous"
+                  />
+                </div>
+                
+                {/* Mobile navigation hint */}
+                <div className="text-center text-xs text-muted-foreground mt-4">
+                  Use Previous/Next buttons to navigate • Tap to zoom
+                </div>
+              </div>
+            ) : (
+              /* Desktop: Flip Book */
+              <div className="flip-book-container">
+                {pages.length > 0 && (
+                  <HTMLFlipBook
+                    key={bookKey}
+                    width={400}
+                    height={600}
+                    size="stretch"
+                    minWidth={300}
+                    maxWidth={800}
+                    minHeight={400}
+                    maxHeight={1200}
+                    maxShadowOpacity={0.5}
+                    showCover={true}
+                    mobileScrollSupport={true}
+                    onFlip={onFlip}
+                    className="demo-book"
+                    ref={flipBookRef}
+                    flippingTime={1000}
+                    usePortrait={false}
+                    startZIndex={0}
+                    autoSize={true}
+                    drawShadow={true}
+                  >
+                    {pages.map((canvas, index) => (
+                      <div 
+                        key={index}
+                        className="page-content" 
+                        style={{ 
+                          width: '100%', 
+                          height: '100%',
+                          backgroundColor: 'white',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          overflow: 'hidden'
+                        }}
+                      >
+                        <img
+                          src={canvas.toDataURL("image/png")}
+                          alt={`Page ${index + 1}`}
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'contain'
+                          }}
+                          crossOrigin="anonymous"
+                        />
+                      </div>
+                    ))}
+                  </HTMLFlipBook>
+                )}
+              </div>
+            )}
+          </>
         )}
       </div>
     </main>
