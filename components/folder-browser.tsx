@@ -82,40 +82,40 @@ export function FolderBrowser({
   }, [breadcrumbs])
 
   return (
-    <div className="mx-auto w-full max-w-7xl">
+    <div className="mx-auto w-full">
       {/* Header with breadcrumbs and search */}
-      <div className="mb-6 space-y-4">
+      <div className="mb-8 space-y-6">
         {/* Breadcrumbs */}
-        <div className="flex items-center gap-2 text-sm">
+        <div className="flex items-center gap-3">
           <Button
-            variant="ghost"
+            variant="outline"
             size="sm"
             onClick={() => navigateToBreadcrumb(0)}
-            className="p-2"
+            className="p-2.5 rounded-xl border-slate-200 dark:border-slate-700 hover:bg-white/50 dark:hover:bg-slate-800/50"
           >
             <Home className="h-4 w-4" />
           </Button>
           {breadcrumbs.length > 1 && (
             <Button
-              variant="ghost"
+              variant="outline"
               size="sm"
               onClick={goBack}
-              className="p-2"
+              className="p-2.5 rounded-xl border-slate-200 dark:border-slate-700 hover:bg-white/50 dark:hover:bg-slate-800/50"
             >
               <ArrowLeft className="h-4 w-4" />
             </Button>
           )}
-          <nav className="flex items-center space-x-1">
+          <nav className="flex items-center space-x-2 bg-white/40 dark:bg-slate-800/40 backdrop-blur-sm rounded-xl px-4 py-2 border border-white/20 dark:border-slate-700/20">
             {breadcrumbs.map((crumb, index) => (
               <div key={crumb.id} className="flex items-center">
-                {index > 0 && <ChevronRight className="h-4 w-4 text-muted-foreground mx-1" />}
+                {index > 0 && <ChevronRight className="h-4 w-4 text-slate-400 mx-2" />}
                 <button
                   onClick={() => navigateToBreadcrumb(index)}
                   className={cn(
-                    "hover:text-primary transition-colors",
+                    "px-2 py-1 rounded-lg transition-all text-sm font-medium",
                     index === breadcrumbs.length - 1 
-                      ? "text-foreground font-medium" 
-                      : "text-muted-foreground"
+                      ? "text-slate-900 dark:text-white bg-white/60 dark:bg-slate-700/60" 
+                      : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/40 dark:hover:bg-slate-700/40"
                   )}
                 >
                   {crumb.name}
@@ -125,18 +125,23 @@ export function FolderBrowser({
           </nav>
         </div>
 
-        {/* Search */}
-        <div className="flex items-center justify-between gap-4">
-          <h2 className="text-2xl font-semibold">
-            {breadcrumbs[breadcrumbs.length - 1].name}
-          </h2>
-          <Input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search in current folder..."
-            aria-label="Search"
-            className="max-w-sm"
-          />
+        {/* Search and Title */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-2">
+              {breadcrumbs[breadcrumbs.length - 1].name}
+            </h2>
+            <p className="text-slate-600 dark:text-slate-400">Browse and manage your documents</p>
+          </div>
+          <div className="relative">
+            <Input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search files..."
+              aria-label="Search"
+              className="w-full sm:w-80 pl-4 pr-4 py-3 rounded-xl border-slate-200 dark:border-slate-700 bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm focus:bg-white dark:focus:bg-slate-800 transition-all"
+            />
+          </div>
         </div>
       </div>
 
@@ -216,13 +221,13 @@ function GridView({
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Grid of folders and PDFs */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-5">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
         {data.items.map((item) => (
           <div
             key={item.id}
-            className="group rounded-xl border bg-card/60 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer overflow-hidden relative"
+            className="group rounded-2xl bg-white/40 dark:bg-slate-800/40 backdrop-blur-sm border border-white/20 dark:border-slate-700/20 shadow-lg hover:shadow-xl hover:shadow-slate-900/10 dark:hover:shadow-slate-900/30 transition-all duration-300 cursor-pointer overflow-hidden relative hover:scale-105 hover:bg-white/60 dark:hover:bg-slate-800/60"
             onClick={(e) => {
               e.preventDefault()
               e.stopPropagation()
@@ -234,11 +239,11 @@ function GridView({
             }}
           >
             {/* Content area */}
-            <div className="aspect-[3/4] flex items-center justify-center overflow-hidden">
+            <div className="aspect-[3/4] flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50/50 to-slate-100/50 dark:from-slate-800/50 dark:to-slate-900/50">
               {item.isFolder ? (
-                <div className="w-full h-full flex items-center justify-center bg-gradient-to-b from-blue-500/10 to-blue-500/5">
-                  <div className="rounded-lg bg-white/70 p-4 shadow-sm">
-                    <Folder className="h-10 w-10 text-blue-600" />
+                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-500/10 via-purple-500/5 to-indigo-500/10">
+                  <div className="rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 p-4 shadow-lg">
+                    <Folder className="h-12 w-12 text-white" />
                   </div>
                 </div>
               ) : (
@@ -247,32 +252,39 @@ function GridView({
             </div>
 
             {/* Item info */}
-            <div className="p-3">
-              <h3 className="font-medium text-sm text-foreground truncate mb-1" title={item.name}>
+            <div className="p-4">
+              <h3 className="font-semibold text-sm text-slate-900 dark:text-white truncate mb-2" title={item.name}>
                 {item.name}
               </h3>
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <div className="space-y-2">
                 {!item.isFolder && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5">
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/60 dark:bg-slate-700/60 border border-white/20 dark:border-slate-600/20">
                     <BadgeIcon mimeType={item.mimeType} />
-                    {labelForMime(item.mimeType)}
-                  </span>
+                    <span className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                      {labelForMime(item.mimeType)}
+                    </span>
+                  </div>
                 )}
-                <span>{item.isFolder ? "Folder" : formatFileSize(item.size || "0")}</span>
+                <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+                  <span>{item.isFolder ? "Folder" : formatFileSize(item.size || "0")}</span>
+                  {item.modifiedTime && (
+                    <span>{formatDate(item.modifiedTime)}</span>
+                  )}
+                </div>
               </div>
-              {item.modifiedTime && (
-                <p className="text-xs text-muted-foreground mt-1">
-                  {formatDate(item.modifiedTime)}
-                </p>
-              )}
             </div>
 
             {/* Hover overlay */}
-            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-all duration-200 flex items-center justify-center opacity-0 group-hover:opacity-100">
-              <Button size="sm" variant="secondary" className="rounded-full">
-                {item.isFolder ? "Open" : "View"}
-              </Button>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
+              <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm rounded-xl px-4 py-2 shadow-lg border border-white/20 dark:border-slate-700/20">
+                <span className="text-sm font-medium text-slate-900 dark:text-white">
+                  {item.isFolder ? "Open Folder" : "View Document"}
+                </span>
+              </div>
             </div>
+
+            {/* Subtle gradient border */}
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-indigo-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
           </div>
         ))}
       </div>

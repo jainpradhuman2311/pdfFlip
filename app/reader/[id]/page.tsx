@@ -2,6 +2,8 @@
 
 import { useMemo } from "react"
 import useSWR from "swr"
+import Link from "next/link"
+import { ArrowLeft, FileText, Home, Image, FileDown, Sparkles } from "lucide-react"
 import { UniversalViewer } from "@/components/pdf-viewer"
 
 export default function ReaderPage({ params }: { params: { id: string } }) {
@@ -31,46 +33,143 @@ export default function ReaderPage({ params }: { params: { id: string } }) {
 
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-      {/* Header Section */}
-      <div className="backdrop-blur-sm bg-white/80 dark:bg-slate-900/80 border-b border-slate-200/50 dark:border-slate-700/50 sticky top-0 z-10">
-        <div className="mx-auto max-w-7xl px-6 py-6">
-          <div className="text-center">
-            <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-600 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-              {title}
-            </h1>
-            <p className="text-sm text-slate-600 dark:text-slate-400 mt-2 font-medium">
-              Professional Document Viewer • PDF, Images & Word Documents
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Viewer Section */}
-      <div className="mx-auto max-w-7xl px-6 py-8">
-        <div className="relative">
-          {/* Decorative elements */}
-          <div className="absolute -top-4 -left-4 w-24 h-24 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-xl"></div>
-          <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-gradient-to-br from-indigo-400/20 to-pink-400/20 rounded-full blur-xl"></div>
-          
-          <div className="relative bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl rounded-2xl border border-slate-200/50 dark:border-slate-700/50 shadow-2xl shadow-slate-900/10 dark:shadow-slate-900/50 overflow-hidden">
-            <div className="relative bg-gradient-to-b from-slate-50 to-white dark:from-slate-800 dark:to-slate-900">
-              {/* Universal Document Viewer */}
-              <UniversalViewer fileUrl={fileUrl} title={title} mimeType={mime} />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800/80 dark:to-slate-900">
+      {/* Enhanced Navigation */}
+      <nav className="border-b border-white/20 backdrop-blur-xl bg-white/80 dark:bg-slate-900/80 sticky top-0 z-50">
+        <div className="mx-auto max-w-7xl px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Link href="/pdfs" className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
+                  <FileText className="w-5 h-5 text-white" />
+                </div>
+                <span className="text-xl font-bold bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">
+                  DocuVault
+                </span>
+              </Link>
               
-              {/* Subtle overlay borders for depth */}
-              <div className="absolute inset-0 rounded-xl ring-1 ring-inset ring-slate-200/20 dark:ring-slate-700/20 pointer-events-none"></div>
+              <div className="hidden md:flex items-center gap-2 ml-4">
+                <Link 
+                  href="/"
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-white/50 dark:hover:bg-slate-800/50 transition-colors"
+                >
+                  <Home className="w-4 h-4" />
+                  <span className="text-sm font-medium">Home</span>
+                </Link>
+                <span className="text-slate-400">/</span>
+                <Link 
+                  href="/pdfs"
+                  className="px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-white/50 dark:hover:bg-slate-800/50 transition-colors text-sm font-medium"
+                >
+                  Library
+                </Link>
+                <span className="text-slate-400">/</span>
+                <span className="text-sm font-medium text-slate-900 dark:text-white">Viewer</span>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-3">
+              <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm border border-white/20 dark:border-slate-700/20">
+                <Sparkles className="w-4 h-4 text-blue-600" />
+                <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Smart Viewer</span>
+              </div>
+              
+              <Link
+                href="/pdfs"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-white/50 dark:hover:bg-slate-800/50 transition-colors"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                <span className="hidden sm:inline text-sm font-medium">Back to Library</span>
+              </Link>
             </div>
           </div>
         </div>
-      </div>
+      </nav>
 
-      {/* Footer */}
-      <div className="text-center pb-8">
-        <p className="text-xs text-slate-500 dark:text-slate-400">
-          Powered by advanced document rendering technology
-        </p>
-      </div>
-    </main>
+      {/* Document Header */}
+      <section className="px-6 py-8 bg-white/40 dark:bg-slate-800/40 backdrop-blur-sm border-b border-white/20 dark:border-slate-700/20">
+        <div className="mx-auto max-w-7xl">
+          <div className="text-center max-w-4xl mx-auto">
+            <h1 className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-white mb-3">
+              {title}
+            </h1>
+            <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+              High-quality document viewing with advanced rendering technology
+            </p>
+            
+            {/* File type indicator */}
+            <div className="flex items-center justify-center gap-2 mt-4">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm border border-white/20 dark:border-slate-700/20">
+                {mime === 'application/pdf' && (
+                  <>
+                    <FileText className="w-4 h-4 text-red-500" />
+                    <span className="text-sm font-medium text-slate-700 dark:text-slate-300">PDF Document</span>
+                  </>
+                )}
+                {mime?.startsWith('image/') && (
+                  <>
+                    <Image className="w-4 h-4 text-green-500" />
+                    <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Image File</span>
+                  </>
+                )}
+                {(mime?.includes('word') || mime?.includes('document')) && (
+                  <>
+                    <FileDown className="w-4 h-4 text-blue-500" />
+                    <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Word Document</span>
+                  </>
+                )}
+                {mime?.includes('presentation') && (
+                  <>
+                    <FileDown className="w-4 h-4 text-orange-500" />
+                    <span className="text-sm font-medium text-slate-700 dark:text-slate-300">PowerPoint</span>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Enhanced Viewer Section */}
+      <main className="relative px-6 py-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="relative">
+            {/* Ambient decorative elements */}
+            <div className="absolute -top-8 -left-8 w-32 h-32 bg-gradient-to-r from-blue-400/10 to-purple-400/10 rounded-full blur-2xl animate-pulse"></div>
+            <div className="absolute -bottom-8 -right-8 w-40 h-40 bg-gradient-to-r from-purple-400/10 to-pink-400/10 rounded-full blur-2xl animate-pulse delay-1000"></div>
+            <div className="absolute top-1/3 right-1/4 w-20 h-20 bg-gradient-to-r from-indigo-400/10 to-blue-400/10 rounded-full blur-xl animate-pulse delay-500"></div>
+            
+            <div className="relative bg-white/60 dark:bg-slate-800/60 backdrop-blur-2xl rounded-3xl border border-white/30 dark:border-slate-700/30 shadow-2xl shadow-slate-900/5 dark:shadow-slate-900/25 overflow-hidden">
+              <div className="relative bg-gradient-to-b from-white/50 to-slate-50/50 dark:from-slate-800/50 dark:to-slate-900/50">
+                {/* Universal Document Viewer */}
+                <UniversalViewer fileUrl={fileUrl} title={title} mimeType={mime} />
+                
+                {/* Enhanced overlay borders for depth */}
+                <div className="absolute inset-0 rounded-3xl ring-1 ring-inset ring-white/30 dark:ring-slate-700/30 pointer-events-none"></div>
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-500/5 via-transparent to-purple-500/5 pointer-events-none"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      {/* Enhanced Footer */}
+      <footer className="text-center pb-12 px-6">
+        <div className="mx-auto max-w-2xl">
+          <div className="bg-white/40 dark:bg-slate-800/40 backdrop-blur-sm rounded-2xl border border-white/20 dark:border-slate-700/20 p-6">
+            <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">
+              Powered by advanced document rendering technology
+            </p>
+            <div className="flex items-center justify-center gap-4 text-xs text-slate-500 dark:text-slate-400">
+              <span>Optimized Performance</span>
+              <span>•</span>
+              <span>Secure Viewing</span>
+              <span>•</span>
+              <span>Modern Interface</span>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
   )
 }

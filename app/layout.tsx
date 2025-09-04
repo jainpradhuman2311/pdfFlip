@@ -14,9 +14,16 @@ const dmSans = DM_Sans({
 })
 
 export const metadata: Metadata = {
-  title: "v0 App",
-  description: "Created with v0",
-  generator: "v0.app",
+  title: "DocuVault - Modern Document Viewer",
+  description: "Experience seamless document viewing with our modern interface. Browse PDFs, images, and Office documents directly from Google Drive with stunning visual clarity.",
+  generator: "DocuVault",
+  keywords: ["PDF viewer", "document viewer", "Google Drive", "modern UI", "file manager"],
+  authors: [{ name: "DocuVault Team" }],
+  openGraph: {
+    title: "DocuVault - Modern Document Viewer",
+    description: "Experience seamless document viewing with our modern interface",
+    type: "website",
+  },
 }
 
 export default function RootLayout({
