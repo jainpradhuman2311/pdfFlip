@@ -6,6 +6,7 @@ import { ChevronRight, Folder, ArrowLeft, Home } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
+import Image from "next/image"
 
 type DriveItem = {
   id: string
@@ -14,6 +15,7 @@ type DriveItem = {
   modifiedTime?: string
   size?: string
   isFolder: boolean
+  thumbnailLink?: string
 }
 
 type DriveChildrenResponse = {
@@ -216,11 +218,11 @@ function GridView({
   return (
     <div className="space-y-6">
       {/* Grid of folders and PDFs */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-5">
         {data.items.map((item) => (
           <div
             key={item.id}
-            className="group bg-white rounded-lg border shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer overflow-hidden relative"
+            className="group rounded-xl border bg-card/60 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer overflow-hidden relative"
             onClick={(e) => {
               e.preventDefault()
               e.stopPropagation()
@@ -232,42 +234,43 @@ function GridView({
             }}
           >
             {/* Content area */}
-            <div className="aspect-[3/4] flex items-center justify-center">
+            <div className="aspect-[3/4] flex items-center justify-center overflow-hidden">
               {item.isFolder ? (
-                <div className="bg-gradient-to-br from-blue-50 to-blue-100 w-full h-full flex items-center justify-center">
-                  <Folder className="h-16 w-16 text-blue-600" />
+                <div className="w-full h-full flex items-center justify-center bg-gradient-to-b from-blue-500/10 to-blue-500/5">
+                  <div className="rounded-lg bg-white/70 p-4 shadow-sm">
+                    <Folder className="h-10 w-10 text-blue-600" />
+                  </div>
                 </div>
               ) : (
-                <div className="bg-gradient-to-br from-red-50 to-red-100 w-full h-full flex items-center justify-center">
-                  <img
-                    src="/images/pdf-placeholder.jpg"
-                    alt="PDF file"
-                    className="h-16 w-12 object-contain"
-                    loading="lazy"
-                  />
-                </div>
+                <FilePreview mimeType={item.mimeType} thumbnailLink={item.thumbnailLink} name={item.name} />
               )}
             </div>
 
             {/* Item info */}
             <div className="p-3">
-              <h3 className="font-medium text-sm text-gray-900 truncate mb-1" title={item.name}>
+              <h3 className="font-medium text-sm text-foreground truncate mb-1" title={item.name}>
                 {item.name}
               </h3>
-              <p className="text-xs text-gray-500">
-                {item.isFolder ? "Folder" : item.size ? formatFileSize(item.size) : "PDF"}
-              </p>
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                {!item.isFolder && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5">
+                    <BadgeIcon mimeType={item.mimeType} />
+                    {labelForMime(item.mimeType)}
+                  </span>
+                )}
+                <span>{item.isFolder ? "Folder" : formatFileSize(item.size || "0")}</span>
+              </div>
               {item.modifiedTime && (
-                <p className="text-xs text-gray-400 mt-1">
+                <p className="text-xs text-muted-foreground mt-1">
                   {formatDate(item.modifiedTime)}
                 </p>
               )}
             </div>
 
             {/* Hover overlay */}
-            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-200 flex items-center justify-center opacity-0 group-hover:opacity-100">
-              <Button size="sm" className="bg-primary text-primary-foreground">
-                {item.isFolder ? "Open Folder" : "Open PDF"}
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-all duration-200 flex items-center justify-center opacity-0 group-hover:opacity-100">
+              <Button size="sm" variant="secondary" className="rounded-full">
+                {item.isFolder ? "Open" : "View"}
               </Button>
             </div>
           </div>
@@ -297,4 +300,55 @@ function GridView({
       )}
     </div>
   )
+}
+
+function FilePreview({ mimeType, thumbnailLink, name }: { mimeType: string; thumbnailLink?: string; name: string }) {
+  if (mimeType.startsWith("image/")) {
+    const src = "/placeholder.jpg"
+    return (
+      <div className="relative w-full h-full">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={src} alt={name} className="w-full h-full object-cover" />
+        <div className="absolute left-2 top-2 inline-flex items-center gap-1 rounded-full bg-black/50 text-white px-2 py-0.5 text-[10px]">
+          <img src="/icons/image.svg" alt="image" className="h-3 w-3 opacity-90" /> Image
+        </div>
+      </div>
+    )
+  }
+  if (
+    mimeType === "application/msword" ||
+    mimeType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+  ) {
+    return (
+      <div className="bg-gradient-to-br from-sky-50 to-sky-100 w-full h-full flex items-center justify-center">
+        <img src="/icons/doc.svg" alt="DOC file" className="h-12 w-12 object-contain" loading="lazy" />
+      </div>
+    )
+  }
+  return (
+    <div className="bg-gradient-to-br from-red-50 to-red-100 w-full h-full flex items-center justify-center">
+      <img src="/icons/pdf.svg" alt="PDF file" className="h-12 w-12 object-contain" loading="lazy" />
+    </div>
+  )
+}
+
+function BadgeIcon({ mimeType }: { mimeType: string }) {
+  if (mimeType.startsWith("image/")) return <img src="/icons/image.svg" alt="image" className="h-3 w-3" />
+  if (
+    mimeType === "application/msword" ||
+    mimeType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+  )
+    return <img src="/icons/doc.svg" alt="doc" className="h-3 w-3" />
+  return <img src="/icons/pdf.svg" alt="pdf" className="h-3 w-3" />
+}
+
+function labelForMime(mimeType: string) {
+  if (mimeType.startsWith("image/")) return "Image"
+  if (
+    mimeType === "application/msword" ||
+    mimeType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+  )
+    return "Word Document"
+  if (mimeType === "application/pdf") return "PDF"
+  return "File"
 }

@@ -4,6 +4,7 @@ export type DriveItem = {
   mimeType: string
   modifiedTime?: string
   size?: string
+  thumbnailLink?: string
 }
 
 export type DriveChildrenResponse = {
@@ -27,7 +28,13 @@ export async function listDriveChildren(params: {
 
   const baseQ =
     `'${folderId}' in parents and trashed=false and ` +
-    `(mimeType='application/pdf' or mimeType='application/vnd.google-apps.folder')`
+    `(` +
+    `mimeType='application/vnd.google-apps.folder' or ` +
+    `mimeType='application/pdf' or ` +
+    `mimeType='application/msword' or ` +
+    `mimeType='application/vnd.openxmlformats-officedocument.wordprocessingml.document' or ` +
+    `mimeType contains 'image/'` +
+    `)`
   const searchQ = query ? ` and name contains '${escapeSingleQuotes(query)}'` : ""
   const q = `${baseQ}${searchQ}`
 
@@ -35,7 +42,10 @@ export async function listDriveChildren(params: {
   url.searchParams.set("q", q)
   url.searchParams.set("key", key)
   url.searchParams.set("pageSize", String(pageSize))
-  url.searchParams.set("fields", "nextPageToken,files(id,name,mimeType,modifiedTime,size)")
+  url.searchParams.set(
+    "fields",
+    "nextPageToken,files(id,name,mimeType,modifiedTime,size,thumbnailLink)"
+  )
   url.searchParams.set("supportsAllDrives", "true")
   url.searchParams.set("includeItemsFromAllDrives", "true")
   if (pageToken) url.searchParams.set("pageToken", pageToken)

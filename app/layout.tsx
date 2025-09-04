@@ -4,6 +4,7 @@ import { GeistMono } from "geist/font/mono"
 import { Analytics } from "@vercel/analytics/next"
 import { DM_Sans } from "next/font/google"
 import { Suspense } from "react"
+import { ThemeProvider } from "@/components/theme-provider"
 import "./globals.css"
 
 const dmSans = DM_Sans({
@@ -24,12 +25,14 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`font-sans ${dmSans.variable} ${GeistMono.variable}`}>
-        <Suspense fallback={null}>
-          {children}
-          <Analytics />
-        </Suspense>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+          <Suspense fallback={null}>
+            {children}
+            <Analytics />
+          </Suspense>
+        </ThemeProvider>
       </body>
     </html>
   )
