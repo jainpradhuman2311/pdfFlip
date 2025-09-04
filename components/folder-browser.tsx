@@ -241,8 +241,8 @@ function GridView({
             {/* Content area */}
             <div className="aspect-[3/4] flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50/50 to-slate-100/50 dark:from-slate-800/50 dark:to-slate-900/50">
               {item.isFolder ? (
-                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-500/10 via-purple-500/5 to-indigo-500/10">
-                  <div className="rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 p-4 shadow-lg">
+                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-orange-500/10 via-red-500/5 to-amber-500/10">
+                  <div className="rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 p-4 shadow-lg">
                     <Folder className="h-12 w-12 text-white" />
                   </div>
                 </div>
@@ -266,7 +266,7 @@ function GridView({
                   </div>
                 )}
                 <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-                  <span>{item.isFolder ? "Folder" : formatFileSize(item.size || "0")}</span>
+                  <span>{item.isFolder ? "फ़ोल्डर" : formatFileSize(item.size || "0")}</span>
                   {item.modifiedTime && (
                     <span>{formatDate(item.modifiedTime)}</span>
                   )}
@@ -275,16 +275,16 @@ function GridView({
             </div>
 
             {/* Hover overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
-              <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm rounded-xl px-4 py-2 shadow-lg border border-white/20 dark:border-slate-700/20">
+            <div className="absolute inset-0 bg-gradient-to-t from-orange-900/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
+              <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm rounded-xl px-4 py-2 shadow-lg border border-orange-200/50 dark:border-amber-700/20">
                 <span className="text-sm font-medium text-slate-900 dark:text-white">
-                  {item.isFolder ? "Open Folder" : "View Document"}
+                  {item.isFolder ? "फ़ोल्डर खोलें" : "ग्रंथ देखें"}
                 </span>
               </div>
             </div>
 
             {/* Subtle gradient border */}
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-indigo-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-orange-500/10 via-red-500/10 to-amber-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
           </div>
         ))}
       </div>
@@ -297,16 +297,18 @@ function GridView({
             variant="outline" 
             disabled={pageTokenStack.length === 0} 
             onClick={onPrev}
+            className="border-orange-200 dark:border-amber-700 text-slate-700 dark:text-slate-300 hover:bg-orange-50 dark:hover:bg-amber-900/20"
           >
-            Previous
+            पिछला
           </Button>
           <Button 
             size="sm" 
             variant="outline" 
             disabled={!data?.nextPageToken} 
             onClick={onNext}
+            className="border-orange-200 dark:border-amber-700 text-slate-700 dark:text-slate-300 hover:bg-orange-50 dark:hover:bg-amber-900/20"
           >
-            Next
+            अगला
           </Button>
         </div>
       )}
@@ -321,8 +323,8 @@ function FilePreview({ mimeType, thumbnailLink, name }: { mimeType: string; thum
       <div className="relative w-full h-full">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={src} alt={name} className="w-full h-full object-cover" />
-        <div className="absolute left-2 top-2 inline-flex items-center gap-1 rounded-full bg-black/50 text-white px-2 py-0.5 text-[10px]">
-          <img src="/icons/image.svg" alt="image" className="h-3 w-3 opacity-90" /> Image
+        <div className="absolute left-2 top-2 inline-flex items-center gap-1 rounded-full bg-green-600/80 text-white px-2 py-0.5 text-[10px] font-medium">
+          <img src="/icons/image.svg" alt="image" className="h-3 w-3 opacity-90" /> चित्र
         </div>
       </div>
     )
@@ -332,14 +334,20 @@ function FilePreview({ mimeType, thumbnailLink, name }: { mimeType: string; thum
     mimeType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
   ) {
     return (
-      <div className="bg-gradient-to-br from-sky-50 to-sky-100 w-full h-full flex items-center justify-center">
+      <div className="bg-gradient-to-br from-blue-50 to-blue-100 w-full h-full flex items-center justify-center relative">
         <img src="/icons/doc.svg" alt="DOC file" className="h-12 w-12 object-contain" loading="lazy" />
+        <div className="absolute left-2 top-2 inline-flex items-center gap-1 rounded-full bg-blue-600/80 text-white px-2 py-0.5 text-[10px] font-medium">
+          प्रकाशित ग्रंथ
+        </div>
       </div>
     )
   }
   return (
-    <div className="bg-gradient-to-br from-red-50 to-red-100 w-full h-full flex items-center justify-center">
+    <div className="bg-gradient-to-br from-orange-50 to-red-100 w-full h-full flex items-center justify-center relative">
       <img src="/icons/pdf.svg" alt="PDF file" className="h-12 w-12 object-contain" loading="lazy" />
+      <div className="absolute left-2 top-2 inline-flex items-center gap-1 rounded-full bg-red-600/80 text-white px-2 py-0.5 text-[10px] font-medium">
+        जैन ग्रंथ
+      </div>
     </div>
   )
 }
@@ -355,12 +363,12 @@ function BadgeIcon({ mimeType }: { mimeType: string }) {
 }
 
 function labelForMime(mimeType: string) {
-  if (mimeType.startsWith("image/")) return "Image"
+  if (mimeType.startsWith("image/")) return "चित्र"
   if (
     mimeType === "application/msword" ||
     mimeType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
   )
-    return "Word Document"
-  if (mimeType === "application/pdf") return "PDF"
-  return "File"
+    return "प्रकाशित ग्रंथ"
+  if (mimeType === "application/pdf") return "जैन ग्रंथ"
+  return "फ़ाइल"
 }
