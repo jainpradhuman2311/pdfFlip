@@ -162,136 +162,6 @@
   min-height: 60vh;
 }
 
-/* Fullscreen mode styles - Complete override */
-:fullscreen,
-:-webkit-full-screen,
-:-moz-full-screen {
-  background: #000 !important;
-  overflow: hidden !important;
-}
-
-:fullscreen *,
-:-webkit-full-screen *,
-:-moz-full-screen * {
-  box-sizing: border-box !important;
-}
-
-/* Force fullscreen layout */
-:fullscreen main,
-:-webkit-full-screen main,
-:-moz-full-screen main {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  background: #000 !important;
-  overflow: hidden !important;
-}
-
-/* Center the flipbook container */
-:fullscreen .flip-book-container,
-:-webkit-full-screen .flip-book-container,
-:-moz-full-screen .flip-book-container {
-  position: fixed !important;
-  top: 50vh !important;
-  left: 50vw !important;
-  transform: translate(-50%, -50%) !important;
-  width: auto !important;
-  height: auto !important;
-  max-width: none !important;
-  max-height: none !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  background: transparent !important;
-  z-index: 1000 !important;
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-}
-
-/* Style the flipbook itself */
-:fullscreen .stf__parent,
-:-webkit-full-screen .stf__parent,
-:-moz-full-screen .stf__parent {
-  position: relative !important;
-  transform: none !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  width: auto !important;
-  height: auto !important;
-}
-
-:fullscreen .stf__wrapper,
-:-webkit-full-screen .stf__wrapper,
-:-moz-full-screen .stf__wrapper {
-  position: relative !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  transform: none !important;
-}
-
-:fullscreen .demo-book,
-:-webkit-full-screen .demo-book,
-:-moz-full-screen .demo-book {
-  transform: scale(1.4) !important;
-  transform-origin: center center !important;
-  margin: 0 !important;
-  position: relative !important;
-}
-
-/* Override any positioning from react-pageflip in fullscreen */
-:fullscreen .stf__block,
-:-webkit-full-screen .stf__block,
-:-moz-full-screen .stf__block {
-  position: relative !important;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-/* Hide header in fullscreen */
-:fullscreen .reader-header,
-:-webkit-full-screen .reader-header,
-:-moz-full-screen .reader-header {
-  display: none !important;
-}
-
-/* Position controls in fullscreen */
-:fullscreen .reader-controls,
-:-webkit-full-screen .reader-controls,
-:-moz-full-screen .reader-controls {
-  position: fixed !important;
-  top: 20px !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  z-index: 10000 !important;
-  background: rgba(0, 0, 0, 0.8) !important;
-  backdrop-filter: blur(10px) !important;
-  border-radius: 12px !important;
-  padding: 12px 20px !important;
-}
-
-:fullscreen .reader-controls button,
-:-webkit-full-screen .reader-controls button,
-:-moz-full-screen .reader-controls button {
-  color: white;
-  border-color: rgba(255, 255, 255, 0.3);
-  background: rgba(255, 255, 255, 0.1);
-}
-
-:fullscreen .reader-controls button:hover,
-:-webkit-full-screen .reader-controls button:hover,
-:-moz-full-screen .reader-controls button:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-:fullscreen .reader-controls .text-muted-foreground,
-:-webkit-full-screen .reader-controls .text-muted-foreground,
-:-moz-full-screen .reader-controls .text-muted-foreground {
-  color: rgba(255, 255, 255, 0.8);
-}
 
 .demo-book {
   margin: 0 auto;
@@ -375,34 +245,95 @@
     min-width: 48px;
     font-size: 16px;
   }
+}
 
-  /* Mobile fullscreen styles */
-  :fullscreen .mobile-page-container,
-  :-webkit-full-screen .mobile-page-container,
-  :-moz-full-screen .mobile-page-container {
-    width: 100vw;
-    height: 100vh;
-    max-width: none;
-    padding: 20px;
-    background: #000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+/* Enhanced PDF Scrolling Styles */
+.pdf-scroll-container {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.5) transparent;
+}
 
-  :fullscreen .mobile-page-container > div,
-  :-webkit-full-screen .mobile-page-container > div,
-  :-moz-full-screen .mobile-page-container > div {
-    max-width: 90vw;
-    max-height: 90vh;
-    background: white;
-  }
+.pdf-scroll-container::-webkit-scrollbar {
+  width: 8px;
+}
 
-  :fullscreen .mobile-page-container img,
-  :-webkit-full-screen .mobile-page-container img,
-  :-moz-full-screen .mobile-page-container img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-  }
+.pdf-scroll-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.pdf-scroll-container::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.5);
+  border-radius: 4px;
+}
+
+.pdf-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.7);
+}
+
+/* Dark mode scrollbar */
+.dark .pdf-scroll-container {
+  scrollbar-color: rgba(71, 85, 105, 0.5) transparent;
+}
+
+.dark .pdf-scroll-container::-webkit-scrollbar-thumb {
+  background: rgba(71, 85, 105, 0.5);
+}
+
+.dark .pdf-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(71, 85, 105, 0.7);
+}
+
+/* PDF.js specific scroll improvements */
+.react-doc-viewer .pdf-viewer-container {
+  overflow-y: auto !important;
+  scroll-behavior: smooth !important;
+}
+
+.react-doc-viewer .pdf-viewer-container .page {
+  margin-bottom: 10px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 4px !important;
+}
+
+/* Hide pagination controls if they exist */
+.react-doc-viewer .pagination-controls,
+.react-doc-viewer .page-navigation {
+  display: none !important;
+}
+
+/* Custom PDF Viewer Fullscreen Styles */
+.pdf-page-canvas {
+  transition: all 0.3s ease;
+}
+
+/* Fullscreen PDF styling */
+:fullscreen .pdf-page-canvas,
+:-webkit-full-screen .pdf-page-canvas,
+:-moz-full-screen .pdf-page-canvas {
+  max-width: 90vw !important;
+  max-height: 90vh !important;
+  margin: 10px auto !important;
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Fullscreen PDF container */
+:fullscreen .pdf-scroll-container,
+:-webkit-full-screen .pdf-scroll-container,
+:-moz-full-screen .pdf-scroll-container {
+  background: black !important;
+  padding: 20px !important;
+}
+
+/* Enhanced scrollbar for fullscreen */
+:fullscreen .pdf-scroll-container::-webkit-scrollbar-thumb,
+:-webkit-full-screen .pdf-scroll-container::-webkit-scrollbar-thumb,
+:-moz-full-screen .pdf-scroll-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3) !important;
+}
+
+:fullscreen .pdf-scroll-container::-webkit-scrollbar-thumb:hover,
+:-webkit-full-screen .pdf-scroll-container::-webkit-scrollbar-thumb:hover,
+:-moz-full-screen .pdf-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5) !important;
 }
